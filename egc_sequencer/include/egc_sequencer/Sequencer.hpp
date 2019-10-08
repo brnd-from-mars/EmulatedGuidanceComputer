@@ -30,6 +30,8 @@ namespace egc
 
         void ADS (unsigned short instruction);
 
+        void INCR (unsigned short instruction);
+
         void TS (unsigned short instruction);
 
         std::shared_ptr<egc::Memory> m_Memory;

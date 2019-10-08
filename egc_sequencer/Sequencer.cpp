@@ -25,12 +25,16 @@ void egc::Sequencer::Step ()
         case 020000u:
             switch (quartercode)
             {
+                case 004000u:
+                    INCR(instruction);
+                    break;
                 case 006000u:
                     ADS(instruction);
                     break;
                 default:
                     break;
             }
+            break;
         case 050000u:
             switch (quartercode)
             {
@@ -64,6 +68,9 @@ std::pair<unsigned short, unsigned short> egc::Sequencer::AddWords (unsigned sho
     unsigned short signResult = (result & 040000u);
     if (signA == signB && signA != signResult)
     {
+        result &= 037777u;
+        result |= signA;
+
         if (signA == 040000u)
         {
             overflow = 077776u;
@@ -112,14 +119,60 @@ void egc::Sequencer::ADS (unsigned short instruction)
 }
 
 
+void egc::Sequencer::INCR (unsigned short instruction)
+{
+    unsigned short k = instruction & 001777u;
+
+    auto mk = m_Memory->Read(k);
+
+    unsigned short sign = mk & 040000u;
+
+    if (mk == 077777u)
+    {
+        mk = 000001u;
+    }
+    else
+    {
+        mk += 000001u;
+        if (sign != 040000u)
+        {
+            mk &= 037777u;
+        }
+    }
+
+    m_Memory->Write(k, mk);
+}
+
+
 void egc::Sequencer::TS (unsigned short instruction)
 {
     unsigned short k = instruction & 001777u;
 
-    auto a = m_Memory->Read(00000u);
+    if (k == 000000u) // OVSK
+    {
+        auto overflow = m_Memory->GetAccumulatorOverflow();
 
-    // TODO: Proper overflow handling
+        if (overflow)
+        {
+            m_Memory->Write(00005u, m_Memory->Read(00005u) + 000001u);
+        }
+    }
+    else
+    {
+        auto a = m_Memory->Read(00000u);
 
-    m_Memory->Write(k, a);
-    m_Memory->Write(00000u, a);
+        auto overflow = m_Memory->GetAccumulatorOverflow();
+
+        m_Memory->Write(k, a);
+
+        if (overflow)
+        {
+            m_Memory->Write(00000u, overflow);
+            m_Memory->Write(00005u, m_Memory->Read(00005u) + 000001u);
+        }
+        else
+        {
+            m_Memory->Write(00000u, a);
+        }
+    }
 }
