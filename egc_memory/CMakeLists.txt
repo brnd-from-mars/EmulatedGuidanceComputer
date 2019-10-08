@@ -10,3 +10,5 @@ add_library(egc_memory
 target_include_directories(egc_memory
         PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+target_link_libraries(egc_memory egc_util)

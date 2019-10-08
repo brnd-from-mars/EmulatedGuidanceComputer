@@ -2,17 +2,21 @@
 // Created by Brendan Berg on 2019-10-07.
 //
 
+#include <egc_util/FileSystem.hpp>
+
 #include <egc_memory/FixedMemory.hpp>
 
 
-egc::FixedMemory::FixedMemory (egc::ErasableMemory& erasableMemory)
+egc::FixedMemory::FixedMemory (egc::ErasableMemory& erasableMemory, const std::string& directoryPath, bool create)
     : m_ErasableMemory(erasableMemory)
 {
     m_Banks.reserve(044);
+    auto path = directoryPath + std::string("fixed/");
+    FileSystem::CheckDirectoryPath(path);
 
     for (unsigned short bank = 000; bank < 044; ++bank)
     {
-        m_Banks.push_back(std::make_unique<FixedMemoryBank>(bank));
+        m_Banks.push_back(std::make_unique<FixedMemoryBank>(bank, path, create));
     }
 }
 
@@ -22,6 +26,24 @@ unsigned short egc::FixedMemory::Read (unsigned short cpuAddress, unsigned short
     auto bank = CPUAddressToBank(cpuAddress, feb);
     auto physicalAddress = CPUAddressToPhysicalAddress(bank, cpuAddress);
     return m_Banks[bank]->Read(physicalAddress);
+}
+
+
+void egc::FixedMemory::SaveToFile ()
+{
+    for (auto& bank : m_Banks)
+    {
+        bank->SaveToFile();
+    }
+}
+
+
+void egc::FixedMemory::LoadFromFile ()
+{
+    for (auto& bank : m_Banks)
+    {
+        bank->LoadFromFile();
+    }
 }
 
 

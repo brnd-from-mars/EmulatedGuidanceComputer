@@ -19,7 +19,7 @@ namespace egc
     {
     public:
 
-        ErasableMemory ();
+        explicit ErasableMemory (const std::string& directoryPath, bool create = false);
 
         void Write (unsigned short cpuAddress, unsigned short word);
 
@@ -28,6 +28,10 @@ namespace egc
         unsigned short GetSwitchedErasableBank ();
 
         unsigned short GetSwitchedFixedBank (unsigned short feb);
+
+        void SaveToFile ();
+
+        void LoadFromFile ();
 
 
     private:

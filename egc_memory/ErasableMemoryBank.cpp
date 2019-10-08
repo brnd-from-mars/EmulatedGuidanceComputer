@@ -5,8 +5,9 @@
 #include <egc_memory/ErasableMemoryBank.hpp>
 
 
-egc::ErasableMemoryBank::ErasableMemoryBank (unsigned short bankNumber)
-    : MemoryBank(0400 * bankNumber, 0400), m_BankNumber(bankNumber)
+egc::ErasableMemoryBank::ErasableMemoryBank (unsigned short bankNumber, const std::string& directoryPath,
+                                             bool create)
+    : MemoryBank(bankNumber, 0400 * bankNumber, 0400, directoryPath, create)
 { }
 
 

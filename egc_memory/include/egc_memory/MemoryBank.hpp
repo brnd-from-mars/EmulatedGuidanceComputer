@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <optional>
+#include <string>
 
 
 namespace egc
@@ -16,7 +17,12 @@ namespace egc
     {
     public:
 
-        MemoryBank (unsigned short physicalLowAddress, unsigned short size);
+        MemoryBank (unsigned short bankNumber, unsigned short physicalLowAddress, unsigned short size,
+                    const std::string& directoryPath, bool create = false);
+
+        void SaveToFile ();
+
+        void LoadFromFile ();
 
 
     protected:
@@ -25,16 +31,22 @@ namespace egc
 
         unsigned short GetWord (unsigned short physicalAddress);
 
+        unsigned short m_BankNumber;
+
 
     private:
 
         std::optional<unsigned short> PhysicalToLocalAddress (unsigned short physicalAddress);
+
+        std::string GenerateFilePath(const std::string& directoryPath);
 
         unsigned short m_PhysicalLowAddress;
 
         unsigned short m_Size;
 
         std::vector<unsigned short> m_Data;
+
+        std::string m_FilePath;
 
 
     };

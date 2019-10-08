@@ -15,7 +15,7 @@ namespace egc
     {
     public:
 
-        ErasableMemoryBankZero ();
+        explicit ErasableMemoryBankZero (const std::string& directoryPath, bool create = false);
 
         void Write (unsigned short physicalAddress, unsigned short word) override;
 

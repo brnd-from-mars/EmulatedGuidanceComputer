@@ -15,16 +15,11 @@ namespace egc
     {
     public:
 
-        explicit ErasableMemoryBank (unsigned short bankNumber);
+        explicit ErasableMemoryBank (unsigned short bankNumber, const std::string& directoryPath, bool create = false);
 
         virtual void Write (unsigned short physicalAddress, unsigned short word);
 
         virtual unsigned short Read (unsigned short physicalAddress);
-
-
-    protected:
-
-        unsigned short m_BankNumber;
 
 
     };

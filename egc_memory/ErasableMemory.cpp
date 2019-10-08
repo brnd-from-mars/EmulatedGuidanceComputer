@@ -2,17 +2,21 @@
 // Created by Brendan Berg on 2019-10-07.
 //
 
+#include <egc_util/FileSystem.hpp>
+
 #include <egc_memory/ErasableMemory.hpp>
 
 
-egc::ErasableMemory::ErasableMemory ()
+egc::ErasableMemory::ErasableMemory (const std::string& directoryPath, bool create)
 {
     m_Banks.reserve(010);
+    auto path = directoryPath + std::string("erasable/");
+    FileSystem::CheckDirectoryPath(path);
 
-    m_Banks.push_back(std::make_unique<ErasableMemoryBankZero>());
+    m_Banks.push_back(std::make_unique<ErasableMemoryBankZero>(path, create));
     for (unsigned short bank = 001; bank < 010; ++bank)
     {
-        m_Banks.push_back(std::make_unique<ErasableMemoryBank>(bank));
+        m_Banks.push_back(std::make_unique<ErasableMemoryBank>(bank, path, create));
     }
 }
 
@@ -47,6 +51,24 @@ unsigned short egc::ErasableMemory::GetSwitchedFixedBank (unsigned short feb)
         bank += 010u;
     }
     return bank;
+}
+
+
+void egc::ErasableMemory::SaveToFile ()
+{
+    for (auto& bank : m_Banks)
+    {
+        bank->SaveToFile();
+    }
+}
+
+
+void egc::ErasableMemory::LoadFromFile ()
+{
+    for (auto& bank : m_Banks)
+    {
+        bank->LoadFromFile();
+    }
 }
 
 

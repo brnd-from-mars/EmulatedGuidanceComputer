@@ -5,8 +5,8 @@
 #include <egc_memory/Memory.hpp>
 
 
-egc::Memory::Memory ()
-    : m_FixedMemory(m_ErasableMemory)
+egc::Memory::Memory (const std::string& directoryPath, bool create)
+    : m_ErasableMemory(directoryPath, create), m_FixedMemory(m_ErasableMemory, directoryPath, create)
 { }
 
 
@@ -35,4 +35,18 @@ unsigned short egc::Memory::Read (unsigned short address, unsigned short feb)
 
     // TODO: Add error log
     // address out of bounds
+}
+
+
+void egc::Memory::SaveToFile ()
+{
+    m_ErasableMemory.SaveToFile();
+    m_FixedMemory.SaveToFile();
+}
+
+
+void egc::Memory::LoadFromFile ()
+{
+    m_ErasableMemory.LoadFromFile();
+    m_FixedMemory.LoadFromFile();
 }

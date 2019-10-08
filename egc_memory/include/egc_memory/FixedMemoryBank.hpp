@@ -15,14 +15,11 @@ namespace egc
     {
     public:
 
-        explicit FixedMemoryBank (unsigned short bankNumber);
+        explicit FixedMemoryBank (unsigned short bankNumber, const std::string& directoryPath, bool create = false);
 
         unsigned short Read (unsigned short physicalAddress);
 
 
-    private:
-
-        unsigned short m_BankNumber;
     };
 
 }

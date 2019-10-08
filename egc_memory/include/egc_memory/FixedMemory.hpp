@@ -21,9 +21,13 @@ namespace egc
     public:
 
         // TODO: Add io channel member when implemented
-        explicit FixedMemory (ErasableMemory& erasableMemory);
+        FixedMemory (ErasableMemory& erasableMemory, const std::string& directoryPath, bool create = false);
 
         unsigned short Read (unsigned short cpuAddress, unsigned short feb);
+
+        void SaveToFile ();
+
+        void LoadFromFile ();
 
 
     private:

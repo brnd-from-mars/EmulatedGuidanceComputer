@@ -5,9 +5,15 @@
 #include <egc_memory/ErasableMemoryBankZero.hpp>
 
 
-egc::ErasableMemoryBankZero::ErasableMemoryBankZero ()
-    : ErasableMemoryBank(0)
-{ }
+egc::ErasableMemoryBankZero::ErasableMemoryBankZero (const std::string& directoryPath, bool create)
+    : ErasableMemoryBank(0, directoryPath, create)
+{
+    if (create)
+    {
+        Write(00005u, 004000u);
+        SaveToFile();
+    }
+}
 
 
 void egc::ErasableMemoryBankZero::Write (unsigned short physicalAddress, unsigned short word)

@@ -2,13 +2,22 @@
 // Created by Brendan Berg on 2019-10-07.
 //
 
-#include <egc_memory/Memory.hpp>
+#include <fstream>
+
+#include <egc_emulator/Emulator.hpp>
 
 
-
-int main ()
+int main (int argc, char* argv[])
 {
-    egc::Memory memory;
+    egc::Emulator emulator;
+
+    if (argc > 1)
+    {
+        auto filePath = std::string(argv[1]);
+        emulator.OpenCommandFile(filePath);
+    }
+
+    while (emulator.Update());
 
     return 0;
 }
