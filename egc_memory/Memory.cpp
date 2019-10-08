@@ -12,7 +12,7 @@ egc::Memory::Memory (const std::string& directoryPath, bool create)
 
 void egc::Memory::Write (unsigned short address, unsigned short word)
 {
-    if (address < 02000)
+    if (address < 02000u)
     {
         m_ErasableMemory.Write(address, word);
     }
@@ -24,7 +24,7 @@ void egc::Memory::Write (unsigned short address, unsigned short word)
 
 unsigned short egc::Memory::Read (unsigned short address, unsigned short feb)
 {
-    if (address < 02000)
+    if (address < 02000u)
     {
         return m_ErasableMemory.Read(address);
     }
@@ -35,6 +35,18 @@ unsigned short egc::Memory::Read (unsigned short address, unsigned short feb)
 
     // TODO: Add error log
     // address out of bounds
+}
+
+
+void egc::Memory::SetAccumulatorOverflow (unsigned short overflow)
+{
+    m_ErasableMemory.SetAccumulatorOverflow(overflow);
+}
+
+
+unsigned short egc::Memory::GetAccumulatorOverflow ()
+{
+    return m_ErasableMemory.GetAccumulatorOverflow();
 }
 
 

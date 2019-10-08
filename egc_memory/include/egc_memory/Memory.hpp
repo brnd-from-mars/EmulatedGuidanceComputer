@@ -26,6 +26,10 @@ namespace egc
         // TODO: replace parameter with FEB look-up
         unsigned short Read (unsigned short address, unsigned short feb = 0);
 
+        void SetAccumulatorOverflow (unsigned short overflow);
+
+        unsigned short GetAccumulatorOverflow ();
+
         void SaveToFile ();
 
         void LoadFromFile ();

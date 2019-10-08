@@ -8,6 +8,7 @@
 
 
 egc::ErasableMemory::ErasableMemory (const std::string& directoryPath, bool create)
+    : m_AccumulatorOverflow(000000u)
 {
     m_Banks.reserve(010);
     auto path = directoryPath + std::string("erasable/");
@@ -26,6 +27,11 @@ void egc::ErasableMemory::Write (unsigned short cpuAddress, unsigned short word)
     auto bank = CPUAddressToBank(cpuAddress);
     auto physicalAddress = CPUAddressToPhysicalAddress(bank, cpuAddress);
     m_Banks[bank]->Write(physicalAddress, word);
+
+    if (physicalAddress == 0000000u)
+    {
+        m_AccumulatorOverflow = 000000u;
+    }
 }
 
 
@@ -34,6 +40,18 @@ unsigned short egc::ErasableMemory::Read (unsigned short cpuAddress)
     auto bank = CPUAddressToBank(cpuAddress);
     auto physicalAddress = CPUAddressToPhysicalAddress(bank, cpuAddress);
     return m_Banks[bank]->Read(physicalAddress);
+}
+
+
+void egc::ErasableMemory::SetAccumulatorOverflow (unsigned short overflow)
+{
+    m_AccumulatorOverflow = overflow;
+}
+
+
+unsigned short egc::ErasableMemory::GetAccumulatorOverflow ()
+{
+    return m_AccumulatorOverflow;
 }
 
 

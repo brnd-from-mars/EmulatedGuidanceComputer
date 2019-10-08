@@ -24,6 +24,14 @@ namespace egc
 
     private:
 
+        static std::pair<unsigned short, unsigned short> AddWords (unsigned short a, unsigned short b);
+
+        void AD (unsigned short instruction);
+
+        void ADS (unsigned short instruction);
+
+        void TS (unsigned short instruction);
+
         std::shared_ptr<egc::Memory> m_Memory;
 
 

@@ -25,6 +25,10 @@ namespace egc
 
         unsigned short Read (unsigned short cpuAddress);
 
+        void SetAccumulatorOverflow (unsigned short overflow);
+
+        unsigned short GetAccumulatorOverflow ();
+
         unsigned short GetSwitchedErasableBank ();
 
         unsigned short GetSwitchedFixedBank (unsigned short feb);
@@ -41,6 +45,8 @@ namespace egc
         unsigned short CPUAddressToPhysicalAddress (unsigned short bank, unsigned short cpuAddress);
 
         std::vector<std::unique_ptr<egc::ErasableMemoryBank>> m_Banks;
+
+        unsigned short m_AccumulatorOverflow;
 
 
     };

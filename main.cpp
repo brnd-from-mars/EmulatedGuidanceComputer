@@ -2,8 +2,6 @@
 // Created by Brendan Berg on 2019-10-07.
 //
 
-#include <fstream>
-
 #include <egc_emulator/Emulator.hpp>
 
 

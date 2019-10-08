@@ -55,6 +55,10 @@ bool egc::Emulator::ExecuteCommand (const std::string& commandString)
     {
         Emulation(command);
     }
+    else if (command[0] == std::string("step"))
+    {
+        Step(command);
+    }
     else if (command[0] == std::string("mem"))
     {
         Mem(command);
@@ -108,12 +112,14 @@ void egc::Emulator::Emulation (const std::vector<std::string>& command)
 
         bool newInstance = !FileSystem::CheckDirectoryPath(directoryPath);
         m_Memory = std::make_shared<Memory>(directoryPath, newInstance);
+        m_Sequencer = std::make_shared<Sequencer>(m_Memory);
     }
     else if (command[1] == std::string("close"))
     {
         if (m_Memory)
         {
             m_Memory.reset();
+            m_Sequencer.reset();
         }
     }
     else if (command[1] == std::string("save"))
@@ -128,6 +134,25 @@ void egc::Emulator::Emulation (const std::vector<std::string>& command)
         if (m_Memory)
         {
             m_Memory->LoadFromFile();
+        }
+    }
+}
+
+
+void egc::Emulator::Step (const std::vector<std::string>& command)
+{
+    unsigned short steps = 1;
+
+    if (command.size() > 1)
+    {
+        steps = GET_USHORT_COMMAND(1);
+    }
+
+    if (m_Memory)
+    {
+        for (unsigned short i = 0; i < steps; ++i)
+        {
+            m_Sequencer->Step();
         }
     }
 }

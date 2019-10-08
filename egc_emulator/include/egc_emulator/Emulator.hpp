@@ -35,6 +35,8 @@ namespace egc
 
         void Emulation (const std::vector<std::string>& command);
 
+        void Step (const std::vector<std::string>& command);
+
         void Mem (const std::vector<std::string>& command);
 
         std::shared_ptr<egc::Memory> m_Memory;
