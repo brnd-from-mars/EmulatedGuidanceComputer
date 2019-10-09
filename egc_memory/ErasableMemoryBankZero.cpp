@@ -37,19 +37,19 @@ void egc::ErasableMemoryBankZero::Write (unsigned short physicalAddress, unsigne
         case 00007u:
             break;
         case 00020u:
-            word = (word & 077776u >> 1u) | (word & 000001u << 14u);
+            word = ((word & 077776u) >> 1u) | ((word & 000001u) << 14u);
             ErasableMemoryBank::Write(physicalAddress, word);
             break;
         case 00021u:
-            word = (word & 077776u >> 1u) | (word & 040000u);
+            word = ((word & 077776u) >> 1u) | (word & 040000u);
             ErasableMemoryBank::Write(physicalAddress, word);
             break;
         case 00022u:
-            word = (word & 037777u << 1u) | (word & 040000u >> 14u);
+            word = ((word & 037777u) << 1u) | ((word & 040000u) >> 14u);
             ErasableMemoryBank::Write(physicalAddress, word);
             break;
         case 00023u:
-            word = word & 037600u >> 7u;
+            word = (word & 037600u) >> 7u;
             ErasableMemoryBank::Write(physicalAddress, word);
             break;
         default:
