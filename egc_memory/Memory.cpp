@@ -50,6 +50,24 @@ unsigned short egc::Memory::GetAccumulatorOverflow ()
 }
 
 
+void egc::Memory::SetExtendFlag ()
+{
+    m_ErasableMemory.SetExtendFlag();
+}
+
+
+void egc::Memory::ResetExtendFlag ()
+{
+    m_ErasableMemory.ResetExtendFlag();
+}
+
+
+unsigned short egc::Memory::GetExtendFlag ()
+{
+    return m_ErasableMemory.GetExtendFlag();
+}
+
+
 void egc::Memory::SaveToFile ()
 {
     m_ErasableMemory.SaveToFile();

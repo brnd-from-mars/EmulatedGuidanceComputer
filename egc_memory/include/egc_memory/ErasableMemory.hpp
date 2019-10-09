@@ -29,6 +29,12 @@ namespace egc
 
         unsigned short GetAccumulatorOverflow ();
 
+        void SetExtendFlag ();
+
+        void ResetExtendFlag ();
+
+        unsigned short GetExtendFlag ();
+
         unsigned short GetSwitchedErasableBank ();
 
         unsigned short GetSwitchedFixedBank (unsigned short feb);
@@ -47,6 +53,8 @@ namespace egc
         std::vector<std::unique_ptr<egc::ErasableMemoryBank>> m_Banks;
 
         unsigned short m_AccumulatorOverflow;
+
+        unsigned short m_ExtendFlag;
 
 
     };

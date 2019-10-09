@@ -30,6 +30,12 @@ namespace egc
 
         unsigned short GetAccumulatorOverflow ();
 
+        void SetExtendFlag ();
+
+        void ResetExtendFlag ();
+
+        unsigned short GetExtendFlag ();
+
         void SaveToFile ();
 
         void LoadFromFile ();

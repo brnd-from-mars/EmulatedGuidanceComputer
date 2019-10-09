@@ -8,7 +8,7 @@
 
 
 egc::ErasableMemory::ErasableMemory (const std::string& directoryPath, bool create)
-    : m_AccumulatorOverflow(000000u)
+    : m_AccumulatorOverflow(000000u), m_ExtendFlag(000000u)
 {
     m_Banks.reserve(010);
     auto path = directoryPath + std::string("erasable/");
@@ -52,6 +52,24 @@ void egc::ErasableMemory::SetAccumulatorOverflow (unsigned short overflow)
 unsigned short egc::ErasableMemory::GetAccumulatorOverflow ()
 {
     return m_AccumulatorOverflow;
+}
+
+
+void egc::ErasableMemory::SetExtendFlag ()
+{
+    m_ExtendFlag = 000001u;
+}
+
+
+void egc::ErasableMemory::ResetExtendFlag ()
+{
+    m_ExtendFlag = 000000u;
+}
+
+
+unsigned short egc::ErasableMemory::GetExtendFlag ()
+{
+    return m_ExtendFlag;
 }
 
 

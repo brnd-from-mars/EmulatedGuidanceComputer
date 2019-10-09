@@ -17,14 +17,46 @@ void egc::Sequencer::Step ()
     unsigned short instruction = m_Memory->Read(z) & 077777u;
     m_Memory->Write(00005u, z + 000001u);
 
+    unsigned short isExtended = m_Memory->GetExtendFlag();
+    m_Memory->ResetExtendFlag();
+
+    if (isExtended)
+    {
+        StepExtended(instruction);
+    }
+    else
+    {
+        StepUnextended(instruction);
+    }
+}
+
+
+void egc::Sequencer::StepUnextended (unsigned short instruction)
+{
     unsigned short opcode = instruction & 070000u;
     unsigned short quartercode = instruction & 006000u;
 
     switch (opcode)
     {
+        case 000000u:
+            switch (quartercode)
+            {
+                case 000000u:
+                    if (instruction == 000006u)
+                    {
+                        EXTEND(instruction);
+                    }
+                    break;
+                default:
+                    break;
+            }
+            break;
         case 020000u:
             switch (quartercode)
             {
+                case 000000u:
+                    DAS(instruction);
+                    break;
                 case 004000u:
                     INCR(instruction);
                     break;
@@ -47,6 +79,38 @@ void egc::Sequencer::Step ()
             break;
         case 060000u:
             AD(instruction);
+            break;
+        case 070000u:
+            MASK(instruction);
+            break;
+        default:
+            break;
+    }
+}
+
+
+void egc::Sequencer::StepExtended (unsigned short instruction)
+{
+    unsigned short opcode = instruction & 070000u;
+    unsigned short quartercode = instruction & 006000u;
+
+    switch (opcode)
+    {
+        case 020000u:
+            switch (quartercode)
+            {
+                case 004000u:
+                    AUG(instruction);
+                    break;
+                case 006000u:
+                    DIM(instruction);
+                    break;
+                default:
+                    break;
+            }
+            break;
+        case 060000u:
+            SU(instruction);
             break;
         default:
             break;
@@ -82,6 +146,11 @@ std::pair<unsigned short, unsigned short> egc::Sequencer::AddWords (unsigned sho
     }
 
     result &= 077777u;
+
+    if (result == 000000u)
+    {
+        result = 077777u;
+    }
 
     return std::make_pair(result, overflow);
 }
@@ -119,6 +188,76 @@ void egc::Sequencer::ADS (unsigned short instruction)
 }
 
 
+void egc::Sequencer::AUG (unsigned short instruction)
+{
+    unsigned short k = instruction & 001777u;
+
+    auto mk = m_Memory->Read(k);
+
+    unsigned short sign = mk & 040000u;
+
+    if (sign == 040000u)
+    {
+        mk = AddWords(mk, 077776u).first;
+    }
+    else
+    {
+        mk = AddWords(mk, 000001u).first;
+    }
+
+    m_Memory->Write(k, mk);
+}
+
+
+void egc::Sequencer::DAS (unsigned short instruction)
+{
+    unsigned short k = (instruction & 001777u) - 000001u;
+
+    auto mklow = m_Memory->Read(k + 00001u);
+    auto mkhigh = m_Memory->Read(k);
+    auto l = m_Memory->Read(00001u);
+    auto a = m_Memory->Read(00000u);
+
+    auto [resultlow, interflow] = AddWords(l, mklow);
+    auto [resulthigh, overflow] = AddWords(AddWords(a, mkhigh).first, interflow);
+
+    m_Memory->Write(k + 00001u, resultlow);
+    m_Memory->Write(k, resulthigh);
+    m_Memory->Write(00001u, 000000u);
+    m_Memory->Write(00000u, overflow);
+}
+
+
+void egc::Sequencer::DIM (unsigned short instruction)
+{
+    unsigned short k = instruction & 001777u;
+
+    auto mk = m_Memory->Read(k);
+
+    if (mk != 000000u && mk != 077777u)
+    {
+        unsigned short sign = mk & 040000u;
+
+        if (sign == 040000u)
+        {
+            mk = AddWords(mk, 000001u).first;
+        }
+        else
+        {
+            mk = AddWords(mk, 077776u).first;
+        }
+    }
+
+    m_Memory->Write(k, mk);
+}
+
+
+void egc::Sequencer::EXTEND (unsigned short instruction)
+{
+    m_Memory->SetExtendFlag();
+}
+
+
 void egc::Sequencer::INCR (unsigned short instruction)
 {
     unsigned short k = instruction & 001777u;
@@ -133,14 +272,40 @@ void egc::Sequencer::INCR (unsigned short instruction)
     }
     else
     {
-        mk += 000001u;
-        if (sign != 040000u)
-        {
-            mk &= 037777u;
-        }
+        mk = AddWords(mk, 000001u).first;
     }
 
     m_Memory->Write(k, mk);
+}
+
+
+void egc::Sequencer::MASK (unsigned short instruction)
+{
+    unsigned short k = instruction & 007777u;
+
+    auto mk = m_Memory->Read(k);
+    auto a = m_Memory->Read(00000u);
+
+    unsigned short result = mk & a;
+
+    m_Memory->Write(k, mk);
+    m_Memory->Write(00000u, result);
+}
+
+
+void egc::Sequencer::SU (unsigned short instruction)
+{
+    unsigned short k = instruction & 007777u;
+
+    auto mk = m_Memory->Read(k);
+    auto a = m_Memory->Read(00000u);
+
+    auto [result, overflow] = AddWords(a, ~mk & 077777u);
+
+    m_Memory->Write(k, mk);
+    m_Memory->Write(00000u, result);
+
+    m_Memory->SetAccumulatorOverflow(overflow);
 }
 
 

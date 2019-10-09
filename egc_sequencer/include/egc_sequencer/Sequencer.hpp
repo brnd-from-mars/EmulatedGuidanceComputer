@@ -24,13 +24,29 @@ namespace egc
 
     private:
 
+        void StepUnextended (unsigned short instruction);
+
+        void StepExtended (unsigned short instruction);
+
         static std::pair<unsigned short, unsigned short> AddWords (unsigned short a, unsigned short b);
 
         void AD (unsigned short instruction);
 
         void ADS (unsigned short instruction);
 
+        void AUG (unsigned short instruction);
+
+        void DAS (unsigned short instruction);
+
+        void DIM (unsigned short instruction);
+
+        void EXTEND (unsigned short instruction);
+
         void INCR (unsigned short instruction);
+
+        void MASK (unsigned short instruction);
+
+        void SU (unsigned short instruction);
 
         void TS (unsigned short instruction);
 
