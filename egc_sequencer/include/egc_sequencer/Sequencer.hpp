@@ -46,6 +46,8 @@ namespace egc
 
         void MASK (unsigned short instruction);
 
+        void MP (unsigned short instruction);
+
         void SU (unsigned short instruction);
 
         void TS (unsigned short instruction);

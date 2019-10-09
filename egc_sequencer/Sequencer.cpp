@@ -112,6 +112,9 @@ void egc::Sequencer::StepExtended (unsigned short instruction)
         case 060000u:
             SU(instruction);
             break;
+        case 070000u:
+            MP(instruction);
+            break;
         default:
             break;
     }
@@ -213,16 +216,16 @@ void egc::Sequencer::DAS (unsigned short instruction)
 {
     unsigned short k = (instruction & 001777u) - 000001u;
 
-    auto mklow = m_Memory->Read(k + 00001u);
-    auto mkhigh = m_Memory->Read(k);
+    auto mkLow = m_Memory->Read(k + 00001u);
+    auto mkHigh = m_Memory->Read(k);
     auto l = m_Memory->Read(00001u);
     auto a = m_Memory->Read(00000u);
 
-    auto [resultlow, interflow] = AddWords(l, mklow);
-    auto [resulthigh, overflow] = AddWords(AddWords(a, mkhigh).first, interflow);
+    auto [resultLow, interflow] = AddWords(l, mkLow);
+    auto [resultHigh, overflow] = AddWords(AddWords(a, mkHigh).first, interflow);
 
-    m_Memory->Write(k + 00001u, resultlow);
-    m_Memory->Write(k, resulthigh);
+    m_Memory->Write(k + 00001u, resultLow);
+    m_Memory->Write(k, resultHigh);
     m_Memory->Write(00001u, 000000u);
     m_Memory->Write(00000u, overflow);
 }
@@ -290,6 +293,66 @@ void egc::Sequencer::MASK (unsigned short instruction)
 
     m_Memory->Write(k, mk);
     m_Memory->Write(00000u, result);
+}
+
+
+void egc::Sequencer::MP (unsigned short instruction)
+{
+    unsigned short k = instruction & 007777u;
+
+    auto mk = m_Memory->Read(k);
+    auto a = m_Memory->Read(00000u);
+
+    auto digitsMk = mk & 037777u;
+    auto digitsA = a & 037777u;
+
+    auto signMk = mk & 040000u;
+    auto signA = a & 040000u;
+
+    if (signMk)
+    {
+        digitsMk = ~digitsMk & 037777u;
+    }
+
+    if (signA)
+    {
+        digitsA = ~digitsA & 037777u;
+    }
+
+
+    unsigned int result = 00000000000u;
+
+    for (unsigned short i = 0u; i < 14u; ++i)
+    {
+        if (digitsA & (1u << i))
+        {
+            result += (static_cast<unsigned int>(digitsMk) << i);
+        }
+    }
+
+    unsigned short resultLow = result & 00000037777u;
+    unsigned short resultHigh = (result & 01777740000u) >> 14u;
+
+    if (result == 00000000000u)
+    {
+        if ((a == 000000u || a == 077777u) && !(mk == 00000u || mk == 07777u) && signA != signMk)
+        {
+            resultLow = 077777u;
+            resultHigh = 077777u;
+        }
+    }
+    else
+    {
+        if (signMk != signA)
+        {
+            resultLow = ~resultLow & 077777u;
+            resultHigh = ~resultHigh & 077777u;
+        }
+    }
+
+    m_Memory->Write(k, mk);
+    m_Memory->Write(00001u, resultLow);
+    m_Memory->Write(00000u, resultHigh);
 }
 
 
