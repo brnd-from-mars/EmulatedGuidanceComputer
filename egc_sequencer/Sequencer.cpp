@@ -5,6 +5,8 @@
 
 #include <egc_sequencer/Sequencer.hpp>
 
+#include <iostream>
+
 
 egc::Sequencer::Sequencer (std::shared_ptr<egc::Memory> memory)
     : m_Memory(std::move(memory))
@@ -163,6 +165,8 @@ void egc::Sequencer::AD (unsigned short instruction)
 {
     unsigned short k = instruction & 007777u;
 
+    std::cout << "AD" << " " << std::oct << k << std::dec << std::endl;
+
     auto mk = m_Memory->Read(k);
     auto a = m_Memory->Read(00000u);
 
@@ -179,6 +183,8 @@ void egc::Sequencer::ADS (unsigned short instruction)
 {
     unsigned short k = instruction & 001777u;
 
+    std::cout << "ADS" << " " << std::oct << k << std::dec << std::endl;
+
     auto mk = m_Memory->Read(k);
     auto a = m_Memory->Read(00000u);
 
@@ -194,6 +200,8 @@ void egc::Sequencer::ADS (unsigned short instruction)
 void egc::Sequencer::AUG (unsigned short instruction)
 {
     unsigned short k = instruction & 001777u;
+
+    std::cout << "AUG" << " " << std::oct << k << std::dec << std::endl;
 
     auto mk = m_Memory->Read(k);
 
@@ -216,6 +224,8 @@ void egc::Sequencer::DAS (unsigned short instruction)
 {
     unsigned short k = (instruction & 001777u) - 000001u;
 
+    std::cout << "DAS" << " " << std::oct << k << std::dec << std::endl;
+
     auto mkLow = m_Memory->Read(k + 00001u);
     auto mkHigh = m_Memory->Read(k);
     auto l = m_Memory->Read(00001u);
@@ -234,6 +244,8 @@ void egc::Sequencer::DAS (unsigned short instruction)
 void egc::Sequencer::DIM (unsigned short instruction)
 {
     unsigned short k = instruction & 001777u;
+
+    std::cout << "DIM" << " " << std::oct << k << std::dec << std::endl;
 
     auto mk = m_Memory->Read(k);
 
@@ -257,6 +269,8 @@ void egc::Sequencer::DIM (unsigned short instruction)
 
 void egc::Sequencer::EXTEND (unsigned short instruction)
 {
+    std::cout << "EXTEND" << std::endl;
+
     m_Memory->SetExtendFlag();
 }
 
@@ -264,6 +278,8 @@ void egc::Sequencer::EXTEND (unsigned short instruction)
 void egc::Sequencer::INCR (unsigned short instruction)
 {
     unsigned short k = instruction & 001777u;
+
+    std::cout << "INCR" << " " << std::oct << k << std::dec << std::endl;
 
     auto mk = m_Memory->Read(k);
 
@@ -286,6 +302,8 @@ void egc::Sequencer::MASK (unsigned short instruction)
 {
     unsigned short k = instruction & 007777u;
 
+    std::cout << "MASK" << " " << std::oct << k << std::dec << std::endl;
+
     auto mk = m_Memory->Read(k);
     auto a = m_Memory->Read(00000u);
 
@@ -299,6 +317,8 @@ void egc::Sequencer::MASK (unsigned short instruction)
 void egc::Sequencer::MP (unsigned short instruction)
 {
     unsigned short k = instruction & 007777u;
+
+    std::cout << "MP" << " " << std::oct << k << std::dec << std::endl;
 
     auto mk = m_Memory->Read(k);
     auto a = m_Memory->Read(00000u);
@@ -360,6 +380,8 @@ void egc::Sequencer::SU (unsigned short instruction)
 {
     unsigned short k = instruction & 007777u;
 
+    std::cout << "SU" << " " << std::oct << k << std::dec << std::endl;
+
     auto mk = m_Memory->Read(k);
     auto a = m_Memory->Read(00000u);
 
@@ -375,6 +397,8 @@ void egc::Sequencer::SU (unsigned short instruction)
 void egc::Sequencer::TS (unsigned short instruction)
 {
     unsigned short k = instruction & 001777u;
+
+    std::cout << "TS" << " " << std::oct << k << std::dec << std::endl;
 
     if (k == 000000u) // OVSK
     {

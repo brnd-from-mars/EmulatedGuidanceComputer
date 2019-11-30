@@ -18,7 +18,7 @@ egc::ErasableMemoryBankZero::ErasableMemoryBankZero (const std::string& director
 
 void egc::ErasableMemoryBankZero::Write (unsigned short physicalAddress, unsigned short word)
 {
-    // TODO: Extend list of special cases
+    // TODO: Extend list for further special cases
     switch (physicalAddress)
     {
         case 00003u:
