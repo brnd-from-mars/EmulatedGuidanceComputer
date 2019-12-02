@@ -68,6 +68,18 @@ unsigned short egc::Memory::GetExtendFlag ()
 }
 
 
+void egc::Memory::SetIndex (unsigned short index)
+{
+    m_ErasableMemory.SetIndex(index);
+}
+
+
+unsigned short egc::Memory::ResetIndex ()
+{
+    return m_ErasableMemory.ResetIndex();
+}
+
+
 void egc::Memory::SaveToFile ()
 {
     m_ErasableMemory.SaveToFile();

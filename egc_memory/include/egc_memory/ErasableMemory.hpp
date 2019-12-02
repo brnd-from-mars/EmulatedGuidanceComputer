@@ -35,6 +35,10 @@ namespace egc
 
         unsigned short GetExtendFlag ();
 
+        void SetIndex (unsigned short index);
+
+        unsigned short ResetIndex ();
+
         unsigned short GetSwitchedErasableBank ();
 
         unsigned short GetSwitchedFixedBank (unsigned short feb);
@@ -55,6 +59,8 @@ namespace egc
         unsigned short m_AccumulatorOverflow;
 
         unsigned short m_ExtendFlag;
+
+        unsigned short m_Index;
 
 
     };

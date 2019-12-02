@@ -73,6 +73,20 @@ unsigned short egc::ErasableMemory::GetExtendFlag ()
 }
 
 
+void egc::ErasableMemory::SetIndex (unsigned short index)
+{
+    m_Index = index;
+}
+
+
+unsigned short egc::ErasableMemory::ResetIndex ()
+{
+    auto result = m_Index;
+    m_Index = 000000u;
+    return result;
+}
+
+
 unsigned short egc::ErasableMemory::GetSwitchedErasableBank ()
 {
     return m_Banks[000u]->Read(00003u) >> 8u & 000007u;

@@ -36,6 +36,10 @@ namespace egc
 
         unsigned short GetExtendFlag ();
 
+        void SetIndex (unsigned short index);
+
+        unsigned short ResetIndex ();
+
         void SaveToFile ();
 
         void LoadFromFile ();
