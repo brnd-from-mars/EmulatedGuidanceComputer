@@ -186,4 +186,32 @@ void egc::Emulator::Mem (const std::vector<std::string>& command)
             std::cout << std::oct << address << ": " << m_Memory->Read(address) << std::dec << std::endl;
         }
     }
+    else if (command[1] == std::string("reg"))
+    {
+        if (m_Memory)
+        {
+            std::cout << std::oct << "    A: " << m_Memory->Read(00000u) << std::dec << std::endl;
+            std::cout << std::oct << "    L: " << m_Memory->Read(00001u) << std::dec << std::endl;
+            std::cout << std::oct << "    Q: " << m_Memory->Read(00002u) << std::dec << std::endl;
+            std::cout << std::oct << "EBANK: " << m_Memory->Read(00003u) << std::dec << std::endl;
+            std::cout << std::oct << "FBANK: " << m_Memory->Read(00004u) << std::dec << std::endl;
+            std::cout << std::oct << "    Z: " << m_Memory->Read(00005u) << std::dec << std::endl;
+        }
+    }
+    else if (command[1] == std::string("rng"))
+    {
+        CHECK_COMMAND_SIZE(4)
+
+        auto lowAddress = GET_USHORT_COMMAND(2);
+        auto number = GET_USHORT_COMMAND(3);
+
+        if (m_Memory)
+        {
+            for (unsigned short i = 0; i < number; ++i)
+            {
+                auto address = lowAddress + i;
+                std::cout << std::oct << address << ": " << m_Memory->Read(address) << std::dec << std::endl;
+            }
+        }
+    }
 }
