@@ -76,6 +76,10 @@ unsigned short egc::ErasableMemory::GetExtendFlag ()
 void egc::ErasableMemory::SetIndex (unsigned short index)
 {
     m_Index = index;
+    if (m_Index == 077777u)
+    {
+        m_Index = 000000u;
+    }
 }
 
 
